@@ -17,10 +17,6 @@ db.sqlite3
 .idea/
 .vscode/
 
-# Django
-staticfiles/
-media/
-
 # OS
 .DS_Store
 Thumbs.db
