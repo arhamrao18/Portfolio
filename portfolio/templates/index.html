@@ -1019,7 +1019,106 @@ footer {
 .pd-features { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin: 0; padding: 0; }
 .pd-features li { font-size: 13px; color: var(--muted); display: flex; align-items: flex-start; gap: 7px; }
 .pd-features li::before { content: '—'; color: var(--accent); flex-shrink: 0; }
+/* ============================================================
+   MOBILE FLOATING CARDS + RESPONSIVE POLISH — ADD-ON
+   Paste this right before the closing </style> tag in <head>.
+   Nothing above this was changed; this only adds mobile rules.
+   ============================================================ */
 
+/* --- bug fix: footer wrap typo in the base CSS --- */
+.footer-inner { flex-wrap: wrap; }
+
+@media (max-width: 768px) {
+
+  /* ---------- General spacing / touch targets ---------- */
+  .hero-inner { padding: 100px 20px 60px; }
+  .hero h1 { letter-spacing: -1px; }
+  .hero-badge { font-size: 12px; padding: 6px 14px; }
+  .hero-actions { gap: 12px; }
+  .hero-actions a, .hero-actions button { flex: 1 1 auto; justify-content: center; padding: 14px 20px; }
+  .hero-stats { gap: 22px; margin-top: 44px; }
+  .stat-number { font-size: 28px; }
+  .orb-1, .orb-2 { filter: blur(50px); } /* lighter blur = smoother scroll on mobile GPUs */
+  .orb-3 { display: none; }
+
+  .section { padding: 56px 0; }
+  .container { padding: 0 20px; }
+  .section-title { font-size: 28px; }
+  .about-card { padding: 13px 16px; gap: 10px; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .skill-card { padding: 18px 10px; }
+  .skill-icon { font-size: 26px; margin-bottom: 8px; }
+  .skill-name { font-size: 12.5px; }
+  .skill-level { font-size: 10px; }
+
+  .filter-row { gap: 8px; overflow-x: auto; padding-bottom: 4px; flex-wrap: nowrap; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-btn { flex: 0 0 auto; padding: 8px 16px; font-size: 12.5px; }
+
+  .contact-form { padding: 24px; }
+
+  /* ---------- FLOATING CARD CAROUSEL ---------- */
+  .projects-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 8vw;
+    padding: 10px 8vw 28px;
+    margin: 0 -20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .projects-grid::-webkit-scrollbar { display: none; }
+  .projects-grid { scrollbar-width: none; }
+
+  .project-card {
+    flex: 0 0 84vw;
+    max-width: 84vw;
+    scroll-snap-align: center;
+    border-radius: 22px;
+    opacity: 0.55;
+    transform: scale(0.92) translateY(6px);
+    transition: transform 0.4s cubic-bezier(.16,.84,.44,1),
+                opacity 0.4s ease,
+                box-shadow 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  .project-card.pf-active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(99,102,241,0.25);
+  }
+  .project-card.pf-hidden { display: none; } /* keep filter logic working */
+
+  .project-img { height: 190px; }
+  .project-body { padding: 20px; }
+  .project-body h3 { font-size: 18px; }
+  .project-body p { font-size: 13.5px; }
+
+  /* small scroll hint dots under the carousel */
+  .pf-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: -14px;
+  }
+  .pf-dots span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .pf-dots span.pf-dot-active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+}
+
+@media (max-width: 420px) {
+  .project-card { flex-basis: 88vw; max-width: 88vw; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: clamp(36px, 11vw, 48px); }
+}
 button.project-link { background: none; border: none; cursor: pointer; font-family: 'Space Grotesk', sans-serif; }
 .project-link.pf-muted { color: var(--muted); cursor: default; }
 .project-link.pf-muted:hover { gap: 6px; }
@@ -1639,6 +1738,7 @@ button.project-link { background: none; border: none; cursor: pointer; font-fami
 
       <div class="contact-form reveal">
         <form method="POST">
+          {% csrf_token %}
           <div class="form-group">
             <label class="form-label">Your Name</label>
             <input class="form-control" name="name" placeholder="John Smith" type="text">
