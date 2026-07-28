@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arham Rao | Django Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #0a0a0f;
+  --ink2:     #1a1a2e;
+  --slate:    #64748b;
+  --border:   rgba(255,255,255,0.08);
+  --surface:  rgba(255,255,255,0.04);
+  --accent:   #6366f1;
+  --accent2:  #8b5cf6;
+  --glow:     rgba(99,102,241,0.35);
+  --white:    #f8fafc;
+  --muted:    #94a3b8;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--ink);
+  color: var(--white);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ─── NOISE TEXTURE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ─── NAVBAR ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+.logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--white);
+  transition: 0.3s;
+  border-radius: 2px;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+.orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -100px; animation-duration: 14s; }
+.orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: -100px; left: -100px; animation-duration: 10s; animation-delay: -4s; }
+.orb-3 { width: 300px; height: 300px; background: #06b6d4; top: 40%; left: 40%; animation-duration: 16s; animation-delay: -8s; opacity: 0.12; }
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, 30px) scale(1.1); }
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 120px 32px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(99,102,241,0.4);
+  border-radius: 100px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 28px;
+  background: rgba(99,102,241,0.08);
+  animation: fadeUp 0.8s ease both;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(48px, 7vw, 90px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.hero h1 .line { display: block; }
+.hero h1 .gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--muted);
+  max-width: 520px;
+  margin-top: 24px;
+  line-height: 1.7;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.6s ease both;
+}
+
+.btn-primary-custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 0 30px var(--glow);
+}
+.btn-primary-custom:hover {
+  transform: translateY(-3px);
+  background: #4f46e5;
+  box-shadow: 0 10px 40px var(--glow);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: 1px solid var(--border);
+  color: var(--white);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  background: var(--surface);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  background: rgba(99,102,241,0.08);
+  transform: translateY(-3px);
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 64px;
+  animation: fadeUp 0.8s 0.8s ease both;
+  flex-wrap: wrap;
+}
+.stat-item { }
+.stat-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+.stat-number span { color: var(--accent); }
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTIONS ─── */
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.section-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+/* Divider line */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ─── ABOUT ─── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 60px;
+}
+.about-text p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.about-text p strong { color: var(--white); }
+
+.about-img-wrap {
+  position: relative;
+}
+.about-img-frame {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 4/5;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.about-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.about-img-frame:hover img { transform: scale(1.04); }
+
+/* Floating accent card */
+.about-card {
+  position: absolute;
+  bottom: -20px;
+  left: -24px;
+  background: rgba(15,15,25,0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.about-card-icon {
+  width: 42px; height: 42px;
+  background: rgba(99,102,241,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.about-card-text strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+.about-card-text span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ─── SKILLS ─── */
+.skills-section { background: var(--ink2); }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 56px;
+}
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 20px;
+  text-align: center;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.skill-card:hover {
+  border-color: rgba(99,102,241,0.5);
+  transform: translateY(-6px);
+}
+.skill-card:hover::before { opacity: 1; }
+.skill-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+.skill-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  position: relative;
+}
+.skill-level {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 4px;
+  font-weight: 500;
+  position: relative;
+}
+
+/* ─── PROJECTS ─── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  margin-top: 56px;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.project-card:hover {
+  border-color: rgba(99,102,241,0.4);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.project-img {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+  background: var(--ink2);
+}
+.project-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  display: block;
+}
+.project-card:hover .project-img img { transform: scale(1.08); }
+.project-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(10,10,15,0.8));
+}
+.project-body { padding: 24px; }
+.project-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.project-body h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+.project-body p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.project-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+.project-link:hover { gap: 10px; }
+.project-stack { display: flex; gap: 6px; flex-wrap: wrap; }
+.stack-badge {
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ─── CONTACT ─── */
+.contact-section { background: var(--ink2); }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-top: 60px;
+  align-items: start;
+}
+.contact-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.contact-info p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.contact-item-icon {
+  width: 44px; height: 44px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.contact-item-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.contact-item-text span {
+  font-size: 15px;
+  color: var(--white);
+}
+
+/* Form */
+.contact-form {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 36px;
+}
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-control {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+.form-control:focus {
+  border-color: var(--accent);
+  background: rgba(99,102,241,0.06);
+}
+.form-control::placeholder { color: #475569; }
+textarea.form-control { resize: vertical; min-height: 130px; }
+
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px var(--glow);
+  margin-top: 4px;
+}
+.btn-submit:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px var(--glow);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: gap;
+  gap: 20px;
+}
+.footer-copy {
+  font-size: 14px;
+  color: var(--muted);
+}
+.footer-socials {
+  display: flex;
+  gap: 12px;
+}
+.social-btn {
+  width: 38px; height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 16px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.social-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(99,102,241,0.08);
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-img-wrap { max-width: 420px; margin: 0 auto; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,10,15,0.97);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    z-index: 99;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: 22px; }
+  .hamburger { display: flex; z-index: 100; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+  .about-card { position: static; margin-top: 20px; }
+  .section { padding: 70px 0; }
+}
+
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; }
+  .btn-primary-custom, .btn-ghost { justify-content: center; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, .orb, .reveal { animation: none !important; transition: none !important; }
+}
+</style>
+
+<!-- ============================================================
+     AI CHAT WIDGET — STYLES ONLY
+     Added on top of the existing design. Nothing above this line
+     was changed. All classes are prefixed "aic-" so nothing here
+     can collide with or override the portfolio's own CSS.
+     ============================================================ -->
+<style>
+.aic-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 28px var(--glow), 0 0 0 1px rgba(255,255,255,0.15) inset;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-img video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.project-card:hover .project-img video { transform: scale(1.08); }
+.aic-launcher:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 14px 40px var(--glow), 0 0 0 1px rgba(255,255,255,0.2) inset;
+}
+.aic-launcher svg { width: 26px; height: 26px; }
+.aic-launcher .aic-dot {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid var(--ink);
+}
+
+.aic-panel {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  z-index: 999;
+  width: 420px;
+  max-width: calc(100vw - 24px);
+  height: 620px;
+  max-height: calc(100vh - 130px);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+  transform: translateY(24px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(.16,.84,.44,1), opacity 0.3s ease;
+}
+.aic-panel.aic-open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.aic-header {
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(160deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+}
+.aic-header-id { display: flex; align-items: center; gap: 12px; }
+.aic-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  position: relative;
+}
+.aic-avatar .aic-status {
+  position: absolute; bottom: -1px; right: -1px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #22c55e; border: 2px solid var(--ink);
+}
+.aic-header-id strong { display: block; font-size: 14px; font-weight: 700; color: var(--white); }
+.aic-header-id span { font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.aic-header-id span::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22c55e;
+}
+.aic-close {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.aic-close:hover { background: rgba(255,255,255,0.16); }
+
+.aic-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.aic-body::-webkit-scrollbar { width: 6px; }
+.aic-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+.aic-msg { display: flex; gap: 9px; max-width: 88%; }
+.aic-msg.aic-user { align-self: flex-end; flex-direction: row-reverse; }
+.aic-msg.aic-assistant { align-self: flex-start; }
+.aic-msg-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  margin-top: 2px;
+}
+.aic-msg.aic-assistant .aic-msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.aic-msg.aic-user .aic-msg-avatar { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
+
+/* Frosted / water-crystal bubbles — text is always black, per spec */
+.aic-bubble {
+  padding: 11px 15px;
+  border-radius: 15px;
+  font-size: 13.8px;
+  line-height: 1.6;
+  color: #000000;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+.aic-msg.aic-assistant .aic-bubble { border-top-left-radius: 4px; background: rgba(255,255,255,0.75); }
+.aic-msg.aic-user .aic-bubble {
+  border-top-right-radius: 4px;
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(99,102,241,0.35);
+}
+
+.aic-typing .aic-bubble { display: flex; gap: 5px; align-items: center; padding: 13px 16px; }
+.aic-typing .aic-tdot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  animation: aic-bounce 1.2s ease infinite;
+}
+.aic-typing .aic-tdot:nth-child(2) { animation-delay: 0.15s; }
+.aic-typing .aic-tdot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes aic-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.aic-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+.aic-chip {
+  font-size: 12px;
+  padding: 7px 13px;
+  border-radius: 100px;
+  cursor: pointer;
+  color: #000000;
+  background: rgba(255,255,255,0.78);
+  border: 1px solid rgba(255,255,255,0.5);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.aic-chip:hover { transform: translateY(-2px); background: rgba(255,255,255,0.92); }
+
+.aic-input-row {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.aic-input {
+  flex: 1;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 100px;
+  padding: 11px 17px;
+  color: #000000;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.8px;
+  outline: none;
+  backdrop-filter: blur(10px);
+}
+.aic-input::placeholder { color: rgba(0,0,0,0.55); }
+.aic-input:focus { border-color: var(--accent); }
+.aic-send {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s ease;
+}
+.aic-send:hover { transform: scale(1.06); }
+.aic-send svg { width: 17px; height: 17px; }
+
+@media (max-width: 520px) {
+  .aic-panel {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    bottom: 90px;
+    height: 70vh;
+  }
+  .aic-launcher { right: 18px; bottom: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aic-launcher, .aic-panel, .aic-chip, .aic-send, .aic-tdot { transition: none !important; animation: none !important; }
+}
+
+/* ============ FEATURED PROJECTS — ADD-ON ============ */
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 9px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'Space Grotesk', sans-serif;
+  transition: all 0.25s ease;
+}
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter-btn:not(.active):hover { border-color: var(--accent); color: var(--white); }
+.project-card.pf-hidden { display: none; }
+
+.project-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(139,92,246,0.12));
+}
+.project-placeholder .pf-icon { font-size: 34px; }
+.project-placeholder .pf-label { font-size: 12.5px; color: var(--muted); font-weight: 600; letter-spacing: 0.3px; text-align: center; padding: 0 16px; }
+
+.project-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(.16,.84,.44,1);
+}
+.project-details.pf-open { max-height: 700px; margin-top: 6px; }
+.pd-block { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.pd-block h5 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--accent); margin-bottom: 9px; font-weight: 600;
+}
+.pd-block p { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin: 0; }
+.pd-features { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin: 0; padding: 0; }
+.pd-features li { font-size: 13px; color: var(--muted); display: flex; align-items: flex-start; gap: 7px; }
+.pd-features li::before { content: '—'; color: var(--accent); flex-shrink: 0; }
+
+button.project-link { background: none; border: none; cursor: pointer; font-family: 'Space Grotesk', sans-serif; }
+.project-link.pf-muted { color: var(--muted); cursor: default; }
+.project-link.pf-muted:hover { gap: 6px; }
+
+@media (max-width: 480px) { .pd-features { grid-template-columns: 1fr; } }
+
+
+</style>
+</head>
+<body>
+{% load static %}
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="logo">Arham<span>.</span></a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about" onclick="closeMenu()">About</a></li>
+      <li><a href="#skills" onclick="closeMenu()">Skills</a></li>
+      <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+      <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-badge">Available for freelance work</div>
+
+    <h1>
+      <span class="line">Backend</span>
+      <span class="line gradient-text">Developer</span>
+      <span class="line">& Problem Solver</span>
+    </h1>
+
+    <p class="hero-sub">
+      I build scalable, clean Django applications — from database architecture to polished admin dashboards. Based in Pakistan, working worldwide.
+    </p>
+
+   <div class="hero-actions">
+  <a href="#projects" class="btn-primary-custom">
+    View My Work
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="#contact" class="btn-ghost">
+    Hire Me
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </a>
+  <button type="button" class="btn-ghost" onclick="document.getElementById('aicLauncher').click()" style="cursor:pointer;">
+    Ask about Arham (AI)
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 3 2 4 2 6v1h10v-1c0-2 2-3 2-6a7 7 0 0 0-7-7z"/><path d="M9 21h6"/><circle cx="12" cy="9" r="2"/></svg>
+  </button>
+</div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-number">2<span>+</span></div>
+        <div class="stat-label">Projects Shipped</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1<span>+</span></div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">6<span>+</span></div>
+        <div class="stat-label">Technologies</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── ABOUT ─── -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">Who I Am</p>
+      <h2 class="section-title">Building the web from the inside out</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm <strong>Arham Rao</strong>, a Django backend developer passionate about writing clean, efficient code that powers real-world applications. I believe great software starts with solid architecture.</p>
+        <p>From building <strong>Library Management Systems</strong> with complex approval workflows, to full <strong>E-commerce platforms</strong> with cart and order tracking — I focus on the backend logic that makes everything work.</p>
+        <p>My approach: understand the problem deeply first, then build the simplest solution that actually solves it. No unnecessary complexity, no shortcuts.</p>
+      </div>
+      <div class="about-img-wrap reveal">
+        <div class="about-img-frame">
+          <img src="{% static 'WhatsApp Image 2026-07-19 at 11.15.38 AM.jpeg' %}" alt="Arham Rao" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1e1e3a,#2d1b69)';this.parentElement.innerHTML+='<div style=\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-size:80px;font-weight:800;color:rgba(99,102,241,0.3)\'>AR</div>'">
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🎯</div>
+          <div class="about-card-text">
+            <strong>Django Expert</strong>
+            <span>Python · SQL · REST APIs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── SKILLS ─── -->
+<section class="section skills-section" id="skills">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">What I Use</p>
+      <h2 class="section-title">Skills & Technologies</h2>
+      <p class="section-sub">The tools I reach for when building backends that last.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <span class="skill-icon">🐍</span>
+        <div class="skill-name">Python</div>
+        <div class="skill-level">Intermidiate</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🌿</span>
+        <div class="skill-name">Django</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🗄️</span>
+        <div class="skill-name">MYSQL</div>
+        <div class="skill-level">Intermediate</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🌐</span>
+        <div class="skill-name">HTML</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🎨</span>
+        <div class="skill-name">CSS</div>
+        <div class="skill-level">Intermediate</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">⚡</span>
+        <div class="skill-name">Bootstrap</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🐙</span>
+        <div class="skill-name">Git</div>
+        <div class="skill-level">Intermediate</div>
+      </div>
+      <div class="skill-card reveal">
+  <span class="skill-icon">🔀</span>
+  <div class="skill-name">n8n</div>
+  <div class="skill-level">Intermediate</div>
+</div>
+
+<div class="skill-card reveal">
+  <span class="skill-icon">🔌</span>
+  <div class="skill-name">REST API</div>
+  <div class="skill-level">Intermediate</div>
+</div>
+
+<div class="skill-card reveal">
+  <span class="skill-icon">🤖</span>
+  <div class="skill-name">AI Automation</div>
+  <div class="skill-level">Intermediate</div>
+</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── PROJECTS ─── -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">What I've Built</p>
+      <h2 class="section-title">Featured Projects</h2>
+      <p class="section-sub">Real applications solving real problems.</p>
+    </div>
+
+    <!-- ═══ CATEGORY FILTERS ═══ -->
+    <div class="filter-row reveal">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ai">AI</button>
+      <button class="filter-btn" data-filter="automation">Automation</button>
+      <button class="filter-btn" data-filter="backend">Backend</button>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card reveal" data-category="backend">
+        <div class="project-img">
+          <img src="{% static 'Screenshot_11-7-2026_165011_localhost.jpeg' %}" alt="Library Management System" onerror="this.style.display='none'">
+          <div class="project-img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <span class="project-tag">Django · Python · SQL</span>
+          <h3>Library Management System</h3>
+          <p>A complete book request and return system with admin approval workflows, inventory tracking, and member management.</p>
+          <div class="project-stack">
+            <span class="stack-badge">Django</span>
+            <span class="stack-badge">SQLite</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>Manual book tracking meant lost records and no accountability for overdue returns. The approval workflow gives admins control while members self-serve requests.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>Book inventory &amp; tracking</li>
+                <li>Issue / return workflow</li>
+                <li>Admin approval dashboard</li>
+                <li>Member management</li>
+                <li>Notifications</li>
+                <li>Usage reports</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">Python</span>
+                <span class="stack-badge">Django</span>
+                <span class="stack-badge">SQLite</span>
+                <span class="stack-badge">HTML/CSS</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>Django MVT with a relational schema separating members, inventory, and transactions — session-based auth with role checks on every view.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <a href="https://github.com/arhamrao18/Library-Management-System.git" target="_blank" class="project-link">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal" data-category="backend">
+        <div class="project-img">
+          <img src="{% static 'Screenshot_11-7-2026_164525_127.0.0.1.jpeg' %}" alt="School Management System" onerror="this.style.display='none'">
+          <div class="project-img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <span class="project-tag">Django · Bootstrap · SQL</span>
+          <h3>School Management System</h3>
+          <p>Full-featured with four different portals — admin, teacher, student, and parent — covering attendance, marks, and fee management.</p>
+          <div class="project-stack">
+            <span class="stack-badge">Django</span>
+            <span class="stack-badge">Bootstrap</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>Four different user types needed four different experiences from one shared dataset, without duplicating logic or leaking data across roles.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>Admin / Teacher / Student / Parent portals</li>
+                <li>Role-based access control</li>
+                <li>Attendance &amp; student records</li>
+                <li>Marks, results &amp; auto section allocation</li>
+                <li>Class &amp; subject management</li>
+                <li>Fee management</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">Django</span>
+                <span class="stack-badge">Bootstrap</span>
+                <span class="stack-badge">SQL</span>
+                <span class="stack-badge">RBAC</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>Single Django project with role-scoped views and permission mixins per portal, backed by a normalized schema for classes, sections, and results.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <a href="https://github.com/arhamrao18/School-Management-System.git" target="_blank" class="project-link">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project: AI Email Support Chatbot -->
+      <div class="project-card reveal" data-category="ai automation backend">
+        <div class="project-img">
+          <img src="{% static 'WhatsApp Image 2026-07-26 at 9.53.44 AM.jpeg' %}" alt="AI Email Chatbot" onerror="this.style.display='none'">
+          <div class="project-img-overlay"></div>
+          </div>
+        <div class="project-body">
+          <span class="project-tag">N8N · GMAIL API · OPENAI</span>
+          <h3>AI Email Support Chatbot</h3>
+          <p>An intelligent AI-powered email assistant that automates customer support by reading incoming emails, understanding user intent, and generating context-aware replies using AI.</p>
+          <div class="project-stack">
+            <span class="stack-badge">n8n</span>
+            <span class="stack-badge">Gmail API</span>
+            <span class="stack-badge">OpenAI / Gemini</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>Support inboxes pile up fast, and repetitive questions eat hours that should go to real issues. This assistant reads, understands, and replies to routine emails automatically, freeing the team for what actually needs a human.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>AI-powered email understanding</li>
+                <li>Automatic reply generation</li>
+                <li>Gmail integration</li>
+                <li>Knowledge Base support</li>
+                <li>Conversation history</li>
+                <li>Context-aware responses</li>
+                <li>Smart email classification</li>
+                <li>Human handoff support</li>
+                <li>Real-time workflow automation</li>
+                <li>Modular backend architecture</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">Python</span>
+                <span class="stack-badge">Django REST Framework</span>
+                <span class="stack-badge">n8n</span>
+                <span class="stack-badge">Gmail API</span>
+                <span class="stack-badge">OpenAI / Gemini</span>
+                <span class="stack-badge">REST APIs</span>
+                <span class="stack-badge">Webhooks</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>Gmail API trigger feeds new emails into an n8n workflow, which classifies intent, retrieves relevant context from a knowledge base, and calls an LLM for the reply. A Django REST API layer handles logging, thresholds for human handoff, and conversation history.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+             <a href="https://github.com/arhamrao18/Email-Chatbot.git" target="_blank" class="project-link">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project: AI Personal Voice Assistant -->
+      <div class="project-card reveal" data-category="ai automation">
+
+      <div class="project-img">
+  <video muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()">
+    <source src="{% static 'WhatsApp Video 2026-07-23 at 4.08.09 PM (1).mp4' %}" type="video/mp4">
+  </video>
+  <div class="project-img-overlay"></div>
+</div>
+        <div class="project-body">
+          <span class="project-tag">N8N · TTS PIPER · BIZDATA</span>
+          <h3>AI Personal Voice Assistant</h3>
+          <p>A personal AI assistant that answers any question by voice — either offering three possible solutions to choose from, or giving a complete spoken answer directly. It can also look up business phone numbers using the caller's current location.</p>
+          <div class="project-stack">
+            <span class="stack-badge">n8n</span>
+            <span class="stack-badge">TTS Piper</span>
+            <span class="stack-badge">BizData</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>Typing out every question isn't always convenient. This assistant lets you just talk — ask anything, get a spoken answer back, and if there's more than one way to solve the problem, it gives you three options to pick from instead of guessing for you.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>Personal AI voice assistant</li>
+                <li>Answers open-ended questions</li>
+                <li>Offers 3 solution options to choose from</li>
+                <li>Full voice replies</li>
+                <li>Location-aware number lookup</li>
+                <li>BizData integration for business info</li>
+                <li>Natural conversational responses</li>
+                <li>Built to extend into outbound calling</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">n8n</span>
+                <span class="stack-badge">TTS Piper</span>
+                <span class="stack-badge">BizData</span>
+                <span class="stack-badge">OpenAI / Gemini</span>
+                <span class="stack-badge">REST APIs</span>
+                <span class="stack-badge">Webhooks</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>n8n orchestrates the conversation: an LLM reasons through the question and either drafts three candidate answers or one direct response, which Piper TTS (via BizData) converts to speech. Location data is used to pull relevant business numbers on request. The workflow is built so a calling API can be plugged in later to place outbound calls directly.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <a href="https://github.com/arhamrao18/AI-voice-agent.git" target="_blank" class="project-link">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project: AI Social Media Auto Reply Assistant -->
+      <div class="project-card reveal" data-category="ai automation">
+         <div class="project-img">
+          <img src="{% static 'WhatsApp Image 2026-07-22 at 12.48.47 PM (1).jpeg' %}" alt="Auto Reply" onerror="this.style.display='none'">
+          <div class="project-img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <span class="project-tag">N8N · META API · LINKEDIN API</span>
+          <h3>AI Social Media Auto Reply Assistant</h3>
+          <p>An AI assistant that automatically responds to Instagram and LinkedIn messages using a knowledge base, providing human-like replies while helping businesses manage customer conversations efficiently.</p>
+          <div class="project-stack">
+            <span class="stack-badge">n8n</span>
+            <span class="stack-badge">Meta APIs</span>
+            <span class="stack-badge">LinkedIn APIs</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>DMs on Instagram and LinkedIn pile up outside business hours and get missed. This assistant replies instantly with context-aware, on-brand answers and only escalates when it actually needs to.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>Instagram auto replies</li>
+                <li>LinkedIn auto replies</li>
+                <li>Knowledge Base integration</li>
+                <li>Context-aware responses</li>
+                <li>Lead qualification</li>
+                <li>Human-like conversations</li>
+                <li>Business inquiry handling</li>
+                <li>Workflow automation</li>
+                <li>Easy integration with external systems</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">n8n</span>
+                <span class="stack-badge">Unipile APIs</span>
+                <span class="stack-badge">LinkedIn APIs</span>
+                <span class="stack-badge">OpenAI / Gemini</span>
+                <span class="stack-badge">REST APIs</span>
+                <span class="stack-badge">Webhooks</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>Meta and LinkedIn message webhooks feed n8n, which retrieves relevant answers from a shared knowledge base and generates a reply through an LLM — with lead qualification logic scoring each conversation before handoff.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+             <a href="https://github.com/arhamrao18/Social-accounts-auto-reply.git">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project: AI-Powered Web Scraping & Lead Generation -->
+      <div class="project-card reveal" data-category="ai automation backend">
+        <div class="project-img">
+          <img src="{% static 'WhatsApp Image 2026-07-26 at 10.22.19 AM.jpeg' %}" alt="Lead Scraper" onerror="this.style.display='none'">
+          <div class="project-img-overlay"></div>
+        </div>
+        <div class="project-body">
+          <span class="project-tag">PYTHON · APIFY · N8N</span>
+          <h3>AI-Powered Web Scraping &amp; Lead Generation</h3>
+          <p>An intelligent web scraping solution that automatically collects business information from websites, structures the data, and prepares qualified leads for outreach and automation workflows.</p>
+          <div class="project-stack">
+            <span class="stack-badge">Python</span>
+            <span class="stack-badge">Apify</span>
+            <span class="stack-badge">n8n</span>
+          </div>
+
+          <div class="project-details" data-details>
+            <div class="pd-block">
+              <h5>Problem It Solves</h5>
+              <p>Manually building lead lists is slow and error-prone. This pipeline scrapes, cleans, and structures business data automatically, delivering ready-to-use leads instead of raw pages.</p>
+            </div>
+            <div class="pd-block">
+              <h5>Key Features</h5>
+              <ul class="pd-features">
+                <li>AI-assisted web scraping</li>
+                <li>Business data extraction</li>
+                <li>Lead generation</li>
+                <li>Data cleaning</li>
+                <li>Structured output</li>
+                <li>Automated workflows</li>
+                <li>CSV / Google Sheets export</li>
+                <li>Scheduled scraping</li>
+                <li>API integration</li>
+                <li>Intelligent filtering</li>
+              </ul>
+            </div>
+            <div class="pd-block">
+              <h5>Technologies Used</h5>
+              <div class="project-stack">
+                <span class="stack-badge">Python</span>
+                <span class="stack-badge">JavaScript</span>
+                <span class="stack-badge">Apify</span>
+                <span class="stack-badge">n8n</span>
+                <span class="stack-badge">Webhooks</span>
+              </div>
+            </div>
+            <div class="pd-block">
+              <h5>Architecture Highlights</h5>
+              <p>Business data is collected from Google Maps using the Apify API. n8n workflows process and clean the raw data with Code nodes, enrich each record using a Contact Details Scraper, deduplicate the results, and save qualified leads to Google Sheets, ready for CRM integration or outreach campaigns.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <button class="project-link" data-toggle>
+              <span class="pf-toggle-text">View Details</span>
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+             <a href="https://github.com/arhamrao18/Lead-Scraper.git" target="_blank" class="project-link">
+              GitHub
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ─── CONTACT ─── -->
+<section class="section contact-section" id="contact">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">Get In Touch</p>
+      <h2 class="section-title">Let's build something together</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Open to opportunities</h3>
+        <p>Whether you need a backend system built from scratch  or help scaling an existing project — I'm ready to help. Let's talk.</p>
+
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div class="contact-item-text">
+            <strong>Email</strong>
+            <span>arhamraorao786@gmail.com</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Location</strong>
+            <span>Pakistan · Remote Worldwide</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⚡</div>
+          <div class="contact-item-text">
+            <strong>Response Time</strong>
+            <span>Within 24 hours</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <form method="POST">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-control" name="name" placeholder="John Smith" type="text">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-control" name="email" placeholder="john@company.com" type="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-control" name="message" placeholder="Tell me about your project..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">© 2026 Arham Rao · Django Backend Developer</p>
+    <div class="footer-socials">
+      <a href="https://github.com/arhamraorao786-cpu" target="_blank" class="social-btn" title="GitHub">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      </a>
+      <a href="mailto:arhamraorao786@gmail.com" class="social-btn" title="Email">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Mobile menu
+function toggleMenu() {
+  const links = document.getElementById('nav-links');
+  const btn   = document.getElementById('hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+  document.body.style.overflow = links.classList.contains('open') ? 'hidden' : '';
+}
+function closeMenu() {
+  document.getElementById('nav-links').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── PROJECT DETAILS TOGGLE + CATEGORY FILTER (Featured Projects add-on) ───
+document.querySelectorAll('[data-toggle]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const details = btn.closest('.project-body').querySelector('[data-details]');
+    const open = details.classList.toggle('pf-open');
+    btn.querySelector('.pf-toggle-text').textContent = open ? 'Hide Details' : 'View Details';
+  });
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.getAttribute('data-filter');
+    document.querySelectorAll('.project-card[data-category]').forEach(card => {
+      const cats = card.getAttribute('data-category').split(' ');
+      const show = filter === 'all' || cats.includes(filter);
+      card.classList.toggle('pf-hidden', !show);
+    });
+  });
+});
+
+</script>
+
+<!-- ============================================================
+     AI CHAT WIDGET — HTML
+     Added on top of the existing page. Nothing above this comment
+     was changed, removed, or reordered.
+     ============================================================ -->
+<button class="aic-launcher" id="aicLauncher" aria-label="Open AI assistant">
+  <span class="aic-dot"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+    <path d="M12 2a7 7 0 0 0-7 7c0 3 2 4 2 6v1h10v-1c0-2 2-3 2-6a7 7 0 0 0-7-7z"/>
+    <path d="M9 21h6"/>
+    <circle cx="12" cy="9" r="2"/>
+  </svg>
+</button>
+
+<div class="aic-panel" id="aicPanel">
+  <div class="aic-header">
+    <div class="aic-header-id">
+      <div class="aic-avatar">🤖<span class="aic-status"></span></div>
+      <div>
+        <strong>AI Assistant</strong>
+        <span>Online</span>
+      </div>
+    </div>
+    <button class="aic-close" id="aicClose" aria-label="Close chat">×</button>
+  </div>
+
+  <div class="aic-body" id="aicBody">
+    <!-- Messages are appended here at runtime -->
+  </div>
+
+  <div class="aic-chips" id="aicChips">
+    <span class="aic-chip" data-q="Can Arham integrate REST APIs?">Can Arham integrate REST APIs?</span>
+    <span class="aic-chip" data-q="What projects he built?">What projects he built?</span>
+    <span class="aic-chip" data-q="What technologies he use?">What technologies he use?</span>
+    <span class="aic-chip" data-q="Can he automate my bussiness?">Can he automate my bussiness</span>
+  </div>
+
+  <div class="aic-input-row">
+    <input type="text" class="aic-input" id="aicInput" placeholder="Ask something..." autocomplete="off">
+    <button class="aic-send" id="aicSend" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     AI CHAT WIDGET — JAVASCRIPT (separate from the existing script)
+     Modular, framework-free, and UI-only. No AI API is called and
+     no replies are hardcoded — see the TODO in receiveMessage()
+     for exactly where to wire in your own n8n webhook.
+     ============================================================ -->
+<script>
+(function () {
+  const launcher = document.getElementById('aicLauncher');
+  const panel    = document.getElementById('aicPanel');
+  const closeBtn = document.getElementById('aicClose');
+  const body     = document.getElementById('aicBody');
+  const input    = document.getElementById('aicInput');
+  const sendBtn  = document.getElementById('aicSend');
+  const chips    = document.getElementById('aicChips');
+
+  let welcomed = false;
+
+  function openChat() {
+    panel.classList.add('aic-open');
+    if (!welcomed) {
+      appendAssistantMessage("Hi! I'm the AI assistant for this portfolio. Ask me anything, or tap a suggestion below.");
+      welcomed = true;
+    }
+    input.focus();
+  }
+
+  function closeChat() {
+    panel.classList.remove('aic-open');
+  }
+
+  function toggleChat() {
+    panel.classList.contains('aic-open') ? closeChat() : openChat();
+  }
+
+  launcher.addEventListener('click', toggleChat);
+  closeBtn.addEventListener('click', closeChat);
+
+  /**
+   * appendUserMessage(text)
+   * Renders a user message bubble on the right.
+   */
+  function appendUserMessage(text) {
+    const msg = document.createElement('div');
+    msg.className = 'aic-msg aic-user';
+    msg.innerHTML = '<div class="aic-msg-avatar">🙂</div><div class="aic-bubble"></div>';
+    msg.querySelector('.aic-bubble').textContent = text;
+    body.appendChild(msg);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  /**
+   * appendAssistantMessage(text)
+   * Renders an assistant message bubble on the left.
+   */
+  function appendAssistantMessage(text) {
+    const msg = document.createElement('div');
+    msg.className = 'aic-msg aic-assistant';
+    msg.innerHTML = '<div class="aic-msg-avatar">🤖</div><div class="aic-bubble"></div>';
+    msg.querySelector('.aic-bubble').textContent = text;
+    body.appendChild(msg);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  /**
+   * showTyping() / hideTyping()
+   * Shows or removes a three-dot "thinking" indicator bubble.
+   */
+  let typingEl = null;
+  function showTyping() {
+    typingEl = document.createElement('div');
+    typingEl.className = 'aic-msg aic-assistant aic-typing';
+    typingEl.innerHTML =
+      '<div class="aic-msg-avatar">🤖</div>' +
+      '<div class="aic-bubble"><span class="aic-tdot"></span><span class="aic-tdot"></span><span class="aic-tdot"></span></div>';
+    body.appendChild(typingEl);
+    body.scrollTop = body.scrollHeight;
+  }
+  function hideTyping() {
+    if (typingEl) {
+      typingEl.remove();
+      typingEl = null;
+    }
+  }
+
+  /**
+   * sendMessage(message)
+   * Entry point when the user sends something — renders their
+   * bubble, clears the input, then hands off to receiveMessage().
+   */
+  function sendMessage(message) {
+    if (!message || !message.trim()) return;
+    appendUserMessage(message);
+    input.value = '';
+    chips.style.display = 'none';
+    receiveMessage(message);
+  }
+
+  /**
+   * receiveMessage(message)
+   * Sends the user's message to the connected n8n webhook and
+   * renders whatever reply comes back.
+   */
+  function receiveMessage(message) {
+    showTyping();
+
+    fetch('https://wifi-recapture-gangly.ngrok-free.dev/webhook/a05f7c5d-39f9-43a8-9abc-566ddc5a9181', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: message })
+    })
+      .then(res => res.json())
+      .then(data => {
+        hideTyping();
+        appendAssistantMessage(data.reply);
+      })
+      .catch(() => {
+        hideTyping();
+        appendAssistantMessage("Something went wrong — please try again.");
+      });
+  }
+
+  sendBtn.addEventListener('click', function () { sendMessage(input.value); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendMessage(input.value);
+  });
+  chips.addEventListener('click', function (e) {
+    const chip = e.target.closest('.aic-chip');
+    if (chip) sendMessage(chip.getAttribute('data-q'));
+  });
+})();
+</script>
+</body>
+</html>
