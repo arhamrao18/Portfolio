@@ -2006,5 +2006,58 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 })();
 </script>
+<script>
+(function () {
+  const grid = document.querySelector('.projects-grid');
+  if (!grid) return;
+
+  function isMobile() { return window.innerWidth <= 768; }
+
+  let dotsWrap = null;
+  function buildDots() {
+    const visibleCards = [...grid.querySelectorAll('.project-card:not(.pf-hidden)')];
+    if (dotsWrap) dotsWrap.remove();
+    dotsWrap = document.createElement('div');
+    dotsWrap.className = 'pf-dots';
+    visibleCards.forEach(() => {
+      const d = document.createElement('span');
+      dotsWrap.appendChild(d);
+    });
+    grid.insertAdjacentElement('afterend', dotsWrap);
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('pf-active', entry.intersectionRatio > 0.6);
+    });
+    if (dotsWrap) {
+      const visibleCards = [...grid.querySelectorAll('.project-card:not(.pf-hidden)')];
+      const activeIndex = visibleCards.findIndex(c => c.classList.contains('pf-active'));
+      [...dotsWrap.children].forEach((d, i) => d.classList.toggle('pf-dot-active', i === activeIndex));
+    }
+  }, { root: grid, threshold: [0, 0.6, 1] });
+
+  function observeCards() {
+    grid.querySelectorAll('.project-card').forEach(c => io.observe(c));
+  }
+
+  function setup() {
+    if (!isMobile()) return;
+    buildDots();
+    observeCards();
+  }
+
+  setup();
+  window.addEventListener('resize', () => {
+    if (isMobile() && !dotsWrap) setup();
+    if (!isMobile() && dotsWrap) { dotsWrap.remove(); dotsWrap = null; }
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => { if (isMobile()) setTimeout(buildDots, 50); });
+  });
+})();
+</script>
 </body>
 </html>
+
