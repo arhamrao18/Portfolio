@@ -32,7 +32,7 @@ ANYMAIL = {
 }
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEFAULT_FROM_EMAIL = os.getenv('My_Email', 'onboarding@resend.dev')
+DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL
 DEFAULT_EMAIL_RECIPIENT = os.getenv('Sender')
 # SECURITY WARNING: don't run with debug turned on in production!
