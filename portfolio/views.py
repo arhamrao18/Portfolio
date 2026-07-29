@@ -22,13 +22,13 @@ def index(request):
                 recipient_list=[settings.DEFAULT_EMAIL_RECIPIENT],
                 fail_silently=False,
             )
-            send_mail(
-                subject="Thank you for contacting me",
-                message=f"Hi {name},\n\nThank you for your message, I will get back to you soon.",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            # send_mail(
+            #     subject="Thank you for contacting me",
+            #     message=f"Hi {name},\n\nThank you for your message, I will get back to you soon.",
+            #     from_email=settings.EMAIL_HOST_USER,
+            #     recipient_list=[email],
+            #     fail_silently=False,
+            # )
             messages.success(request, "Your message has been sent successfully!")
         except Exception as e:
             print("=== EMAIL SEND ERROR ===")
