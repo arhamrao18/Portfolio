@@ -24,6 +24,8 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
 ANYMAIL = {
     "RESEND_API_KEY": os.getenv('RESEND_API_KEY'),
