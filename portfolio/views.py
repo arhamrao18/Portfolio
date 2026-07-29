@@ -1,4 +1,5 @@
 import logging
+import traceback
 from django.shortcuts import render
 from django.conf import settings
 from django.core.mail import send_mail
@@ -7,7 +8,6 @@ from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
-# Create your views here.
 def index(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -31,8 +31,9 @@ def index(request):
             )
             messages.success(request, "Your message has been sent successfully!")
         except Exception as e:
-            # Ye asal error ab Render Logs mein clean dikhega, page crash nahi hoga
+            print("=== EMAIL SEND ERROR ===")
+            traceback.print_exc()
             logger.error(f"Email sending failed: {e}")
-            messages.error(request, "Sorry, something went wrong while sending your message. Please try again later.")
+            messages.error(request, f"Debug error: {e}")
 
     return render(request, 'index.html')
