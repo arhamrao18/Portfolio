@@ -361,6 +361,7 @@ nav.scrolled {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
+  align-items: start;
 }
 .project-card {
   background: var(--panel);
@@ -1275,12 +1276,12 @@ nav { padding: 20px 0; }
     width:calc(100% - 24px);
     order:1;
     gap:5px;
-    margin-bottom:-24px;
+    margin-bottom:-6px;
     z-index:1;
   }
   .arham-name span{
-    font-size:clamp(40px,12.8vw,60px);
-    letter-spacing:-.06em;
+    font-size:clamp(26px,10vw,44px);
+    letter-spacing:-.045em;
   }
  .arham-portrait{
   order:2;
@@ -1315,8 +1316,8 @@ nav { padding: 20px 0; }
   .arham-nav-inner .availability-pill{max-width:175px;font-size:10px;}
   .arham-nav-inner .nav-name{display:none;}
   .arham-hero{padding-top:65px;}
-  .arham-name{margin-bottom:-18px;}
-  .arham-name span{font-size:clamp(34px,12.5vw,50px);}
+  .arham-name{margin-bottom:-4px;}
+  .arham-name span{font-size:clamp(22px,9vw,34px);}
   .arham-portrait{width:96vw;height:118vw;min-height:340px;max-height:440px;}
   .arham-copy h1{font-size:22px;}
   .arham-copy p{font-size:13px;line-height:1.65;}
@@ -1329,28 +1330,26 @@ nav { padding: 20px 0; }
 
 
 /* FINAL POSITION TUNING — hero portrait, backend copy & socials */
-.arham-portrait{margin-bottom:42px;}
+.arham-portrait{margin-bottom:8px;}
 .arham-copy{margin-top:45px;}
 .arham-socials{margin-top:55px;}
 
 @media(max-width:1050px){
-  .arham-portrait{margin-bottom:32px;}
+  .arham-portrait{margin-bottom:4px;}
   .arham-copy{margin-top:30px;}
   .arham-socials{margin-top:40px;}
 }
 
 @media(max-width:768px){
-  .arham-portrait{margin-bottom:0;margin-top:-38px;}
+  .arham-portrait{margin-bottom:0;margin-top:2px;}
   .arham-copy{margin-top:0;}
   .arham-socials{margin-top:14px;}
 }
-
 @media(max-width:480px){
-  .arham-portrait{margin-top:-30px;}
+  .arham-portrait{margin-top:-10px;}
   .arham-copy{margin-top:0;}
   .arham-socials{margin-top:12px;}
 }
-
 /* =========================================================
    ARHAM — FINAL HERO MOTION + PORTRAIT EDGE SHADOW
    Inspired by the supplied reference motion: staged reveal,
@@ -2136,11 +2135,11 @@ body.hero-loading .arham-portrait {
           {% csrf_token %}
           <div class="form-group">
             <label class="form-label">Your Name</label>
-            <input class="form-control" name="name" placeholder="John Smith" type="text">
+            <input class="form-control" name="name" placeholder="aham rao" type="text">
           </div>
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input class="form-control" name="email" placeholder="john@company.com" type="email">
+            <input class="form-control" name="email" placeholder="aham@company.com" type="email">
           </div>
           <div class="form-group">
             <label class="form-label">Message</label>
@@ -2158,7 +2157,7 @@ body.hero-loading .arham-portrait {
   <div class="wrap footer-inner">
     <div class="footer-id">
       <div class="footer-avatar">
-        <img src="{% static 'img/profile.jpg' %}" alt="Arham Rao" onerror="this.remove()">
+        <img src="{% static 'profile.png' %}" alt="Arham Rao" onerror="this.remove()">
       </div>
       <div class="footer-id-text">
         <strong>Arham Rao</strong>
@@ -2225,14 +2224,22 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // Project details toggle
-document.querySelectorAll('[data-toggle]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const details = btn.closest('.project-body').querySelector('[data-details]');
+// Project details toggle (delegated + single-bind guard + strictly per-card)
+if (!window.__projectToggleBound) {
+  window.__projectToggleBound = true;
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-toggle]');
+    if (!btn) return;
+    const card = btn.closest('.project-card');
+    if (!card) return;
+    const details = card.querySelector('[data-details]');
+    if (!details) return;
     const open = details.classList.toggle('pf-open');
     btn.classList.toggle('pf-open', open);
-    btn.querySelector('.pf-toggle-text').textContent = open ? 'Hide Details' : 'View Details';
+    const label = btn.querySelector('.pf-toggle-text');
+    if (label) label.textContent = open ? 'Hide Details' : 'View Details';
   });
-});
+}
 
 // Category filter
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -2269,11 +2276,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-</body>
-</html>
+
 
 <script>
-  // Grayscale → color reveal that follows the cursor
+   // Grayscale → color reveal that follows the cursor
 (function () {
   const portrait = document.getElementById('arhamPortrait');
   const colorImg = portrait ? portrait.querySelector('.portrait-img-color') : null;
@@ -2305,3 +2311,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 })();
 </script>
+</body>
+</html>
+
