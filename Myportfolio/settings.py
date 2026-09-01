@@ -36,7 +36,7 @@ DEFAULT_FROM_EMAIL = 'onboarding@resend.dev'
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL
 DEFAULT_EMAIL_RECIPIENT = os.getenv('Sender')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = "True"
 
 ALLOWED_HOSTS = [
     ".onrender.com",
