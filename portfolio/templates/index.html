@@ -1696,7 +1696,7 @@ body.hero-loading .arham-portrait {
 
       <div class="project-card reveal" data-category="backend">
         <div class="project-img">
-          <span class="project-tag-pill">Backend</span>
+          <span class="project-tag-pill">Full-Stack</span>
           <img src="{% static 'Screenshot_11-7-2026_165011_localhost.jpeg' %}" alt="Library Management System"
                loading="lazy"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -1704,35 +1704,39 @@ body.hero-loading .arham-portrait {
         </div>
         <div class="project-body">
           <h3>Library Management System</h3>
-          <p>A complete book request and return system with admin approval workflows, inventory tracking, and member management.</p>
+          <p>A full-stack library platform with secure member authentication, automated book due-dates and fines, monthly membership billing, and real online payments via Stripe.</p>
           <div class="project-stack">
             <span class="stack-badge">Django</span>
-            <span class="stack-badge">Python</span>
+            <span class="stack-badge">Django REST Framework</span>
+            <span class="stack-badge">React</span>
+            <span class="stack-badge">JWT</span>
+            <span class="stack-badge">Stripe</span>
             <span class="stack-badge">SQLite</span>
           </div>
-
+ 
           <div class="project-details" data-details>
             <div class="pd-block">
               <h5>Problem It Solves</h5>
-              <p>Manual book tracking meant lost records and no accountability for overdue returns. The approval workflow gives admins control while members self-serve requests.</p>
+              <p>Manual book tracking meant lost records, no accountability for overdue returns, and no way to collect membership dues. This system automates the entire lifecycle — from a member joining and being billed, to borrowing, returning, and paying fees online — while giving admins full visibility and control.</p>
             </div>
             <div class="pd-block">
               <h5>Key Features</h5>
               <ul class="pd-features">
-                <li>Book inventory &amp; tracking</li>
-                <li>Issue / return workflow</li>
-                <li>Admin approval dashboard</li>
-                <li>Member management</li>
-                <li>Notifications</li>
-                <li>Usage reports</li>
+                <li>Custom JWT authentication for members (fixed an IDOR vulnerability in the original design)</li>
+                <li>Book issue / return workflow with admin approval &amp; reject-with-reason</li>
+                <li>Automatic due dates on approval, with late-return fine calculation</li>
+                <li>Monthly membership fee billing, auto-generated per member with due dates and overdue fines</li>
+                <li>Online fee payments via Stripe Checkout, server-verified with auto-generated receipts</li>
+                <li>Live notification badges for pending requests (admin) and unseen updates (members)</li>
+                <li>Admin dashboard for tracking fee collection, outstanding balances, and borrow activity</li>
               </ul>
             </div>
             <div class="pd-block">
               <h5>Architecture Highlights</h5>
-              <p>Django MVT with a relational schema separating members, inventory, and transactions — session-based auth with role checks on every view.</p>
+              <p>Django REST Framework API backend with a React (Vite) frontend, connected via Axios. Two separate JWT authentication flows — one for Django-auth admins, one custom-built for the member model — so member identity is always derived server-side from the token, never trusted from client input. Payment integrity is enforced by re-verifying every Stripe session against Stripe's API before marking a fee as paid.</p>
             </div>
           </div>
-
+ 
           <div class="project-footer">
             <button class="project-link" data-toggle>
               <span class="pf-toggle-text">View Details</span>
@@ -1745,7 +1749,7 @@ body.hero-loading .arham-portrait {
           </div>
         </div>
       </div>
-
+ 
       <div class="project-card reveal" data-category="backend">
         <div class="project-img">
           <span class="project-tag-pill">Backend</span>
@@ -1963,57 +1967,57 @@ body.hero-loading .arham-portrait {
 
       <div class="project-card reveal" data-category="ai automation backend">
         <div class="project-img">
-          <span class="project-tag-pill">AI · Backend</span>
-          <img src="{% static 'WhatsApp Image 2026-07-26 at 10.22.19 AM.jpeg' %}" alt="AI-Powered Web Scraping & Lead Generation"
+          <span class="project-tag-pill">AI · Automation</span>
+          <img src="{% static 'Content_Creator.png' %}" alt="AI Social Media Content Creator"
                loading="lazy"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="project-img-fallback">AI Lead Scraper</div>
+          <div class="project-img-fallback">AI Content Creator</div>
         </div>
         <div class="project-body">
-          <h3>AI-Powered Web Scraping &amp; Lead Generation</h3>
-          <p>An intelligent web scraping solution that automatically collects business information, structures the data, and prepares qualified leads for outreach.</p>
+          <h3>AI Social Media Content Creator</h3>
+          <p>An end-to-end AI marketing pipeline that turns a product's raw details into platform-ready social posts — copy, SEO, hashtags, and an image concept — with human approval before it goes live.</p>
           <div class="project-stack">
-            <span class="stack-badge">Python</span>
-            <span class="stack-badge">Apify</span>
             <span class="stack-badge">n8n</span>
+            <span class="stack-badge">OpenAI</span>
+            <span class="stack-badge">Google Sheets</span>
+            <span class="stack-badge">Buffer</span>
           </div>
-
+ 
           <div class="project-details" data-details>
             <div class="pd-block">
               <h5>Problem It Solves</h5>
-              <p>Manually building lead lists is slow and error-prone. This pipeline scrapes, cleans, and structures business data automatically, delivering ready-to-use leads instead of raw pages.</p>
+              <p>Writing on-brand marketing content for every product across multiple platforms is repetitive and time-consuming. This pipeline reads a product's profile, generates a complete, platform-tailored marketing package, routes it to a human for approval or revision, then publishes it automatically — no manual copywriting or scheduling.</p>
             </div>
             <div class="pd-block">
               <h5>Key Features</h5>
               <ul class="pd-features">
-                <li>AI-assisted web scraping</li>
-                <li>Business data extraction</li>
-                <li>Lead generation</li>
-                <li>Data cleaning</li>
-                <li>Structured output</li>
-                <li>Automated workflows</li>
-                <li>CSV / Google Sheets export</li>
-                <li>Scheduled scraping</li>
+                <li>Pulls product profiles (name, price, features, audience, platform) from Google Sheets</li>
+                <li>AI agent generates a full marketing package: hook, post copy, CTA, SEO title, meta description, and hashtags</li>
+                <li>Content is automatically tailored to each platform's tone and format — LinkedIn, Instagram, Facebook, or X</li>
+                <li>Generates a detailed, premium-style AI image prompt matched to the marketing message</li>
+                <li>Human-in-the-loop approval via email, with a revision workflow — reviewers can request changes to just the copy or just the image, and the agent updates only what was asked</li>
+                <li>Approved content is auto-published to the right platform via Buffer</li>
               </ul>
             </div>
             <div class="pd-block">
               <h5>Architecture Highlights</h5>
-              <p>Business data is collected from Google Maps using the Apify API. n8n workflows process and clean the raw data, enrich each record, deduplicate the results, and save qualified leads to Google Sheets.</p>
+              <p>Built as an n8n workflow: an LLM-powered agent (with a tightly engineered system prompt) produces structured JSON output, which is previewed and sent for approval by email. A decision-check step branches the flow — feedback loops back into the same agent for a targeted revision, while approval routes the content through a platform switch into Buffer for publishing.</p>
             </div>
           </div>
-
+ 
           <div class="project-footer">
             <button class="project-link" data-toggle>
               <span class="pf-toggle-text">View Details</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <a href="https://github.com/arhamrao18/Lead-Scraper.git" target="_blank" class="project-link">
+            <a href="https://github.com/arhamrao18/AI-Social-Media-Content-Creator.git" target="_blank" class="project-link">
               GitHub
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
             </a>
           </div>
         </div>
       </div>
+ 
 
     </div>
   </div>
